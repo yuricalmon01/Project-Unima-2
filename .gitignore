@@ -1,0 +1,30 @@
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de dados local (SQLite)
+*.db
+
+# Configs e credenciais locais
+.env
+
+# Arquivos do VSCode
+.vscode/
+
+# Arquivos do Docker que não precisam ir pro GitHub
+*.log
+
+# Pasta de build
+build/
+dist/
+*.egg-info/
+
+# Migrations podem ser regeneradas
+migrations/
