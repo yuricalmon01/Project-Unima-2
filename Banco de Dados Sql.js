@@ -185,4 +185,4 @@ app.post('/api/auth/register', authenticateToken, authorize(['Admin']), async (r
     try {
         const {
             username, email, password, firstName, lastName,
-            cpf, phone, birthDate, gender,
+            cpf, phone, birthDate, gender, }
