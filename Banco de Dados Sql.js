@@ -181,8 +181,63 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Registro de usuário (apenas admins)
-app.post('/api/auth/register', authenticateToken, authorize(['Admin']), async (req, res) => {
+app.post(
+  '/api/auth/register',
+  authenticateToken,
+  authorize(['Admin']),
+  async (req, res) => {
     try {
-        const {
-            username, email, password, firstName, lastName,
-            cpf, phone, birthDate, gender, }
+      const {
+        username,
+        email,
+        password,
+        firstName,
+        lastName,
+        cpf,
+        phone,
+        birthDate,
+        gender,
+        userTypeId
+      } = req.body;
+
+      if (!username || !email || !password || !firstName || !lastName) {
+        return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
+      }
+
+      // Gera o hash da senha
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      // Cria o usuário no banco
+      const [result] = await pool.execute(
+        `
+        INSERT INTO users (
+          user_type_id, username, email, password_hash,
+          first_name, last_name, cpf, phone, birth_date, gender
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+          userTypeId || 5, // por padrão "Paciente"
+          username,
+          email,
+          hashedPassword,
+          firstName,
+          lastName,
+          cpf || null,
+          phone || null,
+          birthDate || null,
+          gender || null
+        ]
+      );
+
+      res.status(201).json({
+        message: 'Usuário criado com sucesso!',
+        userId: result.insertId,
+      });
+    } catch (error) {
+      console.error('Erro ao registrar usuário:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  }
+);
