@@ -92,4 +92,47 @@ router.delete(
   }
 );
 
+// ============================================
+// POST criar novo usuário (somente Admin)
+// ============================================
+router.post("/", authenticateToken, authorize(["Admin"]), async (req, res) => {
+  try {
+    const {
+      username,
+      email,
+      password,
+      first_name,
+      last_name,
+      user_type_id,
+      active,
+    } = req.body;
+
+    // hash da senha
+    const bcrypt = require("bcryptjs");
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const [result] = await pool.execute(
+      `INSERT INTO users (username, email, password_hash, first_name, last_name, user_type_id, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        username,
+        email,
+        hashedPassword,
+        first_name,
+        last_name,
+        user_type_id,
+        active,
+      ]
+    );
+
+    res.status(201).json({
+      message: "Usuário criado com sucesso!",
+      id: result.insertId,
+    });
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
 module.exports = router;
