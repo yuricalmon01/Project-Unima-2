@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
 
 // Middleware para autenticação com JWT
-const authenticateToken = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+const authenticateToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ error: "Token de acesso requerido" });
@@ -16,19 +15,17 @@ const authenticateToken = async (req, res, next) => {
     );
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch {
     return res.status(403).json({ error: "Token inválido" });
   }
 };
 
 // Middleware para autorização por tipo de usuário
-const authorize = (userTypes) => {
-  return (req, res, next) => {
-    if (!userTypes.includes(req.user.userType)) {
-      return res.status(403).json({ error: "Acesso negado" });
-    }
-    next();
-  };
+const authorize = (userTypes) => (req, res, next) => {
+  if (!userTypes.includes(req.user?.userType)) {
+    return res.status(403).json({ error: "Acesso negado" });
+  }
+  next();
 };
 
 module.exports = { authenticateToken, authorize };

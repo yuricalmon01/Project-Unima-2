@@ -1,19 +1,20 @@
+# Imagem base
 FROM node:18
 
-# diretório de trabalho
+# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# copiar arquivos de dependências
+# Copia os arquivos de dependências
 COPY package*.json ./
 
-# instalar dependências
-RUN npm install
+# Instala as dependências do projeto e o nodemon globalmente
+RUN npm install && npm install -g nodemon
 
-# copiar o restante do código
+# Copia o restante dos arquivos da aplicação
 COPY . .
 
-# expor porta da API
+# Expõe a porta usada pela API
 EXPOSE 3000
 
-# rodar app
-CMD ["npm", "start"]
+# Comando para iniciar o servidor em modo desenvolvimento
+CMD ["npm", "run", "dev"]

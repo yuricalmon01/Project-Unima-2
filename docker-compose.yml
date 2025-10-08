@@ -1,37 +1,37 @@
-version: "3.9"
+version: "3.8"
 
 services:
-  api:
-    build: .
-    container_name: unima_api
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - PORT=3000
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=unima_health_system
-      - JWT_SECRET=unima_secret_key
-      - FRONTEND_URL=http://localhost:3000
-    command: npm start
-    depends_on:
-      - db
-
   db:
-    image: mysql:8.0
+    image: mysql:8
     container_name: unima_db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: unima_health_system
+      TZ: America/Maceio
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d # <--- executa tudo automaticamente
+
+  api:
+    build: .
+    container_name: unima_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=unima_health_system
+      - JWT_SECRET=unima_secret_key
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: npm run dev
 
 volumes:
   db_data:
