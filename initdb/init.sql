@@ -115,11 +115,11 @@ CREATE TABLE IF NOT EXISTS healthcare_professionals (
 
 -- Tipos de usuário
 INSERT IGNORE INTO user_types (id, name, description, permissions) VALUES
-(1, 'Admin', 'Administrador do sistema', '{"all": true}'),
-(2, 'Doctor', 'Médico', '{"patients": "read,write", "appointments": "read,write", "medical_records": "read,write"}'),
-(3, 'Nurse', 'Enfermeiro(a)', '{"patients": "read,write", "appointments": "read", "vital_signs": "read,write"}'),
-(4, 'Receptionist', 'Recepcionista', '{"patients": "read,write", "appointments": "read,write"}'),
-(5, 'Patient', 'Paciente', '{"own_data": "read", "appointments": "read"}');
+(1, 'admin', 'Administrador do sistema', '{"all": true}'),
+(2, 'doctor', 'Médico', '{"patients": "read,write", "appointments": "read,write", "medical_records": "read,write"}'),
+(3, 'nurse', 'Enfermeiro(a)', '{"patients": "read,write", "appointments": "read", "vital_signs": "read,write"}'),
+(4, 'receptionist', 'Recepcionista', '{"patients": "read,write", "appointments": "read,write"}'),
+(5, 'patient', 'Paciente', '{"own_data": "read", "appointments": "read"}');
 
 -- Especialidades médicas
 INSERT IGNORE INTO specialties (id, name, description, code) VALUES
@@ -133,32 +133,28 @@ INSERT IGNORE INTO health_units (id, name, type, phone, email, address, city, st
 (1, 'UBS Central UNIMA', 'UBS', '(82) 3333-1234', 'ubs.central@unima.gov.br', 'Rua Principal, 123 - Centro', 'Maceió', 'AL', '57000-000'),
 (2, 'Hospital UNIMA', 'Hospital', '(82) 3333-5678', 'hospital@unima.gov.br', 'Av. Hospitalar, 456 - Farol', 'Maceió', 'AL', '57050-000');
 
--- Usuário Admin padrão (senha = "123456")
-INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name)
-VALUES (
-  1, 1, 'admin', 'admin@unima.com',
-  '$2a$10$7sK4qHUmv9DpYdUqHDn3OeYzPcUF5MYOPqBbZr3LxS5zFtw6wKthS', -- hash de "123456"
-  'Administrador', 'UNIMA'
-);
+-- ============================================
+-- USUÁRIOS PADRÃO (senha = "123456")
+-- ============================================
 
--- Paciente de exemplo
-INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name)
-VALUES (
-  2, 5, 'joaosilva', 'joao@unima.com',
-  '$2a$10$7sK4qHUmv9DpYdUqHDn3OeYzPcUF5MYOPqBbZr3LxS5zFtw6wKthS',
-  'João', 'Silva'
-);
+-- hash compatível com bcryptjs (gerado no container atual)
+-- senha original: 123456
+SET @HASH := '$2a$10$/SQifqhFIcoKZFcZgyvChOYmuRTA47HgEKSZth4pcFx9MpZ75KSNS';
+
+-- Admin
+INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name, active)
+VALUES (1, 1, 'admin', 'admin@unima.com', @HASH, 'Administrador', 'UNIMA', TRUE);
+
+-- Paciente exemplo
+INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name, active)
+VALUES (2, 5, 'joaosilva', 'joao@unima.com', @HASH, 'João', 'Silva', TRUE);
 
 INSERT IGNORE INTO patients (user_id, patient_number, sus_card, blood_type)
 VALUES (2, 'PAT-0001', '1234567890', 'O+');
 
--- Médico de exemplo
-INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name)
-VALUES (
-  3, 2, 'drmaria', 'maria@unima.com',
-  '$2a$10$7sK4qHUmv9DpYdUqHDn3OeYzPcUF5MYOPqBbZr3LxS5zFtw6wKthS',
-  'Maria', 'Souza'
-);
+-- Médico exemplo
+INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name, active)
+VALUES (3, 2, 'drmaria', 'maria@unima.com', @HASH, 'Maria', 'Souza', TRUE);
 
 INSERT IGNORE INTO healthcare_professionals (user_id, professional_number, license_number, specialty_id, health_unit_id, consultation_fee)
 VALUES (3, 'PRO-0001', 'CRM12345', 1, 2, 250.00);
@@ -166,4 +162,4 @@ VALUES (3, 'PRO-0001', 'CRM12345', 1, 2, 250.00);
 -- ============================================
 -- LOG DE CRIAÇÃO
 -- ============================================
-SELECT "✅ Banco de dados UNIMA inicializado com sucesso!" AS status;
+SELECT "✅ Banco de dados UNIMA inicializado com sucesso (senha: 123456)" AS status;
