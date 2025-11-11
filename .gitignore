@@ -28,3 +28,8 @@ dist/
 
 # Migrations podem ser regeneradas
 migrations/
+
+# Node
+node_modules/
+.env
+coverage/
