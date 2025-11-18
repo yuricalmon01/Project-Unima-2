@@ -9,7 +9,7 @@ let pool;
 
 if (USE_MOCK) {
   // Modo MOCK - usa dados em memória
-  const { MockDB } = require("../mockData");
+  const { MockDB } = require("../mockdata");
   const mockDB = new MockDB();
   
   // Cria um objeto que simula o pool do mysql2

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const { authenticateToken } = require("../middleware/auth");
+const { authenticateToken, authorize } = require("../middleware/auth");
 
 // ============================================
 // Função auxiliar para calcular pontuação de risco
@@ -23,9 +23,9 @@ function calcularRisco(symptoms = []) {
 }
 
 // ============================================
-// GET /api/pacientes → Lista pacientes
+// GET /api/pacientes → Lista pacientes (não para Patient)
 // ============================================
-router.get("/", authenticateToken, async (req, res) => {
+router.get("/", authenticateToken, authorize(["Admin", "Doctor", "Nurse", "Receptionist"]), async (req, res) => {
   try {
     const [rows] = await pool.execute(`
       SELECT 
@@ -33,13 +33,23 @@ router.get("/", authenticateToken, async (req, res) => {
         u.first_name AS nome,
         u.last_name AS sobrenome,
         u.email,
+        p.symptoms,
+        p.risk_score,
         p.created_at
       FROM patients p
       JOIN users u ON p.user_id = u.id
       ORDER BY p.created_at DESC
     `);
+    
+    // Parse symptoms JSON se existir e for string
+    const patients = rows.map((row) => ({
+      ...row,
+      symptoms: row.symptoms 
+        ? (typeof row.symptoms === 'string' ? JSON.parse(row.symptoms) : row.symptoms)
+        : null,
+    }));
 
-    res.json(rows);
+    res.json(patients);
   } catch (error) {
     console.error("Erro ao listar pacientes:", error);
     res.status(500).json({ error: "Erro ao buscar pacientes" });
@@ -47,11 +57,11 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 // ============================================
-// POST /api/pacientes → Adiciona novo paciente e faz triagem
+// POST /api/pacientes → Adiciona novo paciente e faz triagem (não para Patient)
 // ============================================
-router.post("/", authenticateToken, async (req, res) => {
+router.post("/", authenticateToken, authorize(["Admin", "Doctor", "Nurse", "Receptionist"]), async (req, res) => {
   try {
-    const { firstName, lastName, symptoms } = req.body;
+    const { firstName, lastName, email, symptoms } = req.body;
 
     if (!firstName || !lastName) {
       return res
@@ -60,6 +70,26 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 
     const riskScore = calcularRisco(symptoms);
+
+    // Sanitiza nomes para remover caracteres especiais e emails
+    const sanitizeName = (name) => {
+      return name
+        .replace(/@[\w.-]+/g, '') // Remove emails
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove caracteres especiais
+        .trim()
+        .replace(/\s+/g, '_'); // Substitui espaços por underscore
+    };
+
+    const sanitizedFirstName = sanitizeName(firstName);
+    const sanitizedLastName = sanitizeName(lastName);
+
+    // Gera email se não fornecido
+    const patientEmail = email && email.trim() 
+      ? email.trim() 
+      : `${sanitizedFirstName.toLowerCase()}_${sanitizedLastName.toLowerCase()}@unima.com`;
+
+    // Gera username baseado no email (sem o domínio) e normaliza (remove @ e caracteres especiais)
+    const patientUsername = patientEmail.split('@')[0].replace(/^@+/, '').trim();
 
     // Inserir novo usuário + paciente
     const connection = await pool.getConnection();
@@ -75,11 +105,11 @@ router.post("/", authenticateToken, async (req, res) => {
         `,
         [
           5, // tipo paciente
-          firstName.toLowerCase() + Date.now(), // username único
-          `${firstName.toLowerCase()}_${lastName.toLowerCase()}@unima.com`,
+          patientUsername, // username baseado no email (sem domínio)
+          patientEmail,
           "$2b$10$Z6n5O9YF1qO6ZK3FvF9qyeB/UyMRT9o4sG1oHxX4r4mXK2OnfZ5pK", // senha "123456"
-          firstName,
-          lastName,
+          firstName, // Mantém o nome original para exibição
+          lastName, // Mantém o sobrenome original para exibição
           true,
         ]
       );
@@ -89,10 +119,16 @@ router.post("/", authenticateToken, async (req, res) => {
       // 2️⃣ Cria paciente vinculado
       await connection.execute(
         `
-        INSERT INTO patients (user_id, patient_number, blood_type)
-        VALUES (?, ?, ?)
+        INSERT INTO patients (user_id, patient_number, blood_type, symptoms, risk_score)
+        VALUES (?, ?, ?, ?, ?)
         `,
-        [userId, `PAT-${userId.toString().padStart(4, "0")}`, "O+"]
+        [
+          userId, 
+          `PAT-${userId.toString().padStart(4, "0")}`, 
+          "O+",
+          symptoms ? JSON.stringify(symptoms) : null,
+          riskScore
+        ]
       );
 
       await connection.commit();
@@ -102,6 +138,8 @@ router.post("/", authenticateToken, async (req, res) => {
         firstName,
         lastName,
         riskScore,
+        username: patientUsername, // Retorna o username gerado para facilitar o login
+        email: patientEmail,
       });
     } catch (err) {
       await connection.rollback();
