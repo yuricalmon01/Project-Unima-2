@@ -5,8 +5,6 @@ export default [
   // 👇 1) Ignorar arquivos/pastas antigos
   {
     ignores: [
-      "mockdata.js",
-      "mvp-mocado/**",
       "sos_saude_backend/**",
     ],
   },

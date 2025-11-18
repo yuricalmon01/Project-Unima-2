@@ -1,17 +1,9 @@
 // routes/users.js
 const express = require("express");
 const router = express.Router();
-const mysql = require("mysql2/promise");
+const bcrypt = require("bcryptjs");
+const pool = require("../config/db");
 const { authenticateToken, authorize } = require("../middleware/auth");
-
-// Config DB (pode extrair pra config/db.js se preferir)
-const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "unima_health_system",
-};
-const pool = mysql.createPool(dbConfig);
 
 // ============================================
 // GET todos os usuários (somente Admin)
@@ -108,7 +100,6 @@ router.post("/", authenticateToken, authorize(["Admin"]), async (req, res) => {
     } = req.body;
 
     // hash da senha
-    const bcrypt = require("bcryptjs");
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await pool.execute(

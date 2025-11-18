@@ -1,17 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const mysql = require("mysql2/promise");
+const pool = require("../config/db");
 const { authenticateToken } = require("../middleware/auth");
-
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || "unima_db",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "unima_health_system",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
 
 // ============================================
 // Função auxiliar para calcular pontuação de risco

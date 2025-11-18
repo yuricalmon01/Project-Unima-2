@@ -33,3 +33,21 @@ migrations/
 node_modules/
 .env
 coverage/
+# package-lock.json - manter no repositório para consistência
+
+# Uploads
+uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vs/
+.idea/
+*.swp
+*.swo
