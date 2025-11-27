@@ -1,5 +1,5 @@
 // utils/response.js
-function success(res, data = {}, message = '', status = 200) {
+export function success(res, data = {}, message = '', status = 200) {
   return res.status(status).json({
     success: true,
     data,
@@ -7,12 +7,10 @@ function success(res, data = {}, message = '', status = 200) {
   });
 }
 
-function error(res, errorMessage = 'Erro interno', status = 400, extra = {}) {
+export function error(res, errorMessage = 'Erro interno', status = 400, extra = {}) {
   return res.status(status).json({
     success: false,
     error: errorMessage,
     ...extra, // opcional para debug/local
   });
 }
-
-module.exports = { success, error };

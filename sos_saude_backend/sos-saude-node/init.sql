@@ -93,22 +93,6 @@ CREATE TABLE IF NOT EXISTS patients (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS healthcare_professionals (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT NOT NULL UNIQUE,
-  professional_number VARCHAR(20) NOT NULL UNIQUE,
-  license_number VARCHAR(20) NOT NULL UNIQUE,
-  specialty_id INT,
-  health_unit_id INT,
-  is_active BOOLEAN DEFAULT TRUE,
-  consultation_fee DECIMAL(10,2),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (specialty_id) REFERENCES specialties(id),
-  FOREIGN KEY (health_unit_id) REFERENCES health_units(id)
-);
-
 -- ============================================
 -- DADOS INICIAIS
 -- ============================================
@@ -151,11 +135,3 @@ VALUES (2, 'PAT-0001', '1234567890', 'O+');
 -- Médico exemplo (username: medico1, password: 123456)
 INSERT IGNORE INTO users (id, user_type_id, username, email, password_hash, first_name, last_name, active)
 VALUES (3, 2, 'medico1', 'medico1@unima.com', '123456', 'Maria', 'Souza', TRUE);
-
-INSERT IGNORE INTO healthcare_professionals (user_id, professional_number, license_number, specialty_id, health_unit_id, consultation_fee)
-VALUES (3, 'PRO-0001', 'CRM12345', 1, 2, 250.00);
-
--- ============================================
--- LOG DE CRIAÇÃO
--- ============================================
-SELECT "✅ Banco de dados UNIMA inicializado com sucesso (senha: 123456)" AS status;

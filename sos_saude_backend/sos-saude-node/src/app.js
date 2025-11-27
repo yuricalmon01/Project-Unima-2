@@ -3,24 +3,33 @@
 // Estrutura Modular e Segura
 // ============================================
 
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
+import "dotenv/config";
+
+// Validacoes basicas para ambiente de producao
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'unima_secret_key') {
+    throw new Error('❌ JWT_SECRET não configurado ou inválido para produção');
+  }
+  if (!process.env.JWT_REFRESH_SECRET) {
+    throw new Error('❌ JWT_REFRESH_SECRET não configurado para produção');
+  }
+  if (!process.env.DB_PASSWORD || process.env.DB_PASSWORD === 'root') {
+    throw new Error('❌ DB_PASSWORD não deve usar credenciais padrão em produção');
+  }
+}
+
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 // Middlewares e autenticação
-const { authenticateToken } = require("./middleware/auth");
+import { authenticateToken } from "./middleware/auth.js";
 
 // Rotas principais
-const authRoutes = require("./routes/authRoutes");
-// const triageRoutes = require("./routes/triageRoutes");
-// const appointmentsRoutes = require("./routes/appointmentsRoutes");
-// const doctorsRoutes = require("./routes/doctorsRoutes");
-// const medicalRecordsRoutes = require("./routes/medicalRecordsRoutes");
-// const medicinesRoutes = require("./routes/medicinesRoutes");
-// const passwordRoutes = require("./routes/passwordRoutes");
-const pacientesRoutes = require("./routes/pacientesRoutes");
-const usersRoutes = require("./routes/usersRoutes");
+import authRoutes from "./routes/authRoutes.js";
+import pacientesRoutes from "./routes/pacientesRoutes.js";
+import usersRoutes from "./routes/usersRoutes.js";
 
 const app = express();
 
@@ -68,10 +77,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Limite de requisições
+// Limite de requisições (ajustável por ambiente)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: process.env.NODE_ENV === 'production' ? 50 : 200,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use("/api", limiter);
 
@@ -83,12 +94,6 @@ app.use("/api/auth", authRoutes);
 // ============================================
 // Rotas Protegidas (com JWT)
 // ============================================
-// app.use("/api/triage", authenticateToken, triageRoutes);
-// app.use("/api/appointments", authenticateToken, appointmentsRoutes);
-// app.use("/api/doctors", authenticateToken, doctorsRoutes);
-// app.use("/api/medical-records", authenticateToken, medicalRecordsRoutes);
-// app.use("/api/medicines", authenticateToken, medicinesRoutes);
-// app.use("/api/password", authenticateToken, passwordRoutes);
 app.use("/api/pacientes", authenticateToken, pacientesRoutes);
 app.use("/api/users", authenticateToken, usersRoutes);
 
@@ -96,7 +101,11 @@ app.use("/api/users", authenticateToken, usersRoutes);
 // Healthcheck
 // ============================================
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+  res.status(200).json({ status: "ok", message: "API SOS Saúde OK" });
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "API SOS Saúde OK", version: "1.0.0" });
 });
 
 // ============================================
@@ -113,6 +122,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📍 CORS ativado para: ${process.env.ALLOWED_ORIGINS || "localhost"}`);
+  console.log(`🗄️  Banco de dados: ${process.env.DB_HOST || "localhost"}`);
 });
 
-module.exports = app;
+export default app;

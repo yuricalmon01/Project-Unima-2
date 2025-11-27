@@ -1,5 +1,5 @@
-const { success, error } = require("../utils/response");
-const pool = require("../config/db");
+import { success, error } from "../utils/response.js";
+import pool from "../config/db.js";
 
 const UsersController = {
   async getAll(req, res) {
@@ -106,4 +106,4 @@ const UsersController = {
   },
 };
 
-module.exports = UsersController;
+export default UsersController;

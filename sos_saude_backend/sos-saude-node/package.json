@@ -2,10 +2,12 @@
   "name": "sos-saude-node",
   "version": "1.0.0",
   "description": "Backend API for SOS Saúde",
+  "type": "module",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "rehash:passwords": "node src/scripts/rehash_passwords.js"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import PacientesController from "../controllers/pacientesController.js";
+
 const router = express.Router();
-const PacientesController = require("../controllers/pacientesController");
 
 // GET /api/pacientes - Lista todos os pacientes
 router.get("/", PacientesController.getAll);
@@ -17,4 +18,4 @@ router.put("/:id", PacientesController.update);
 // DELETE /api/pacientes/:id - Remove paciente
 router.delete("/:id", PacientesController.remove);
 
-module.exports = router;
+export default router;

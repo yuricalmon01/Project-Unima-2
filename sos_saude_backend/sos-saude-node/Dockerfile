@@ -2,6 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /usr/src/app
 
+# Install global nodemon
+RUN npm install -g nodemon
+
 # Install dependencies
 COPY package*.json ./
 # Install all dependencies (including devDeps) so `npm run dev` works inside the container

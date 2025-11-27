@@ -1,13 +1,13 @@
-const mysql = require("mysql2/promise");
+import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
+  user: process.env.DB_USER || "unima_user",
+  password: process.env.DB_PASSWORD || "unima_pass",
   database: process.env.DB_NAME || "unima_health_system",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
-module.exports = pool;
+export default pool;

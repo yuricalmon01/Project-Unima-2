@@ -1,5 +1,5 @@
-const db = require("../config/db");
-const bcrypt = require("bcryptjs");
+import db from "../config/db.js";
+import bcrypt from "bcryptjs";
 
 const PacientesService = {
   async getAll(filters = {}) {
@@ -98,8 +98,11 @@ const PacientesService = {
     try {
       await connection.beginTransaction();
 
-      // Gera hash de senha (padrão: 123456)
-      const passwordHash = await bcrypt.hash("123456", 10);
+      // Usa senha fornecida ou gera uma temporária
+      const plainPassword = data.password && data.password.length >= 6 ? data.password : null;
+      const generatedPassword = !plainPassword ? ("P@t" + Math.random().toString(36).slice(2, 10)) : null;
+      const passwordToHash = plainPassword || generatedPassword;
+      const passwordHash = await bcrypt.hash(passwordToHash, 10);
 
       // Gera username único
       let username = `paciente_${Date.now()}`;
@@ -160,7 +163,7 @@ const PacientesService = {
 
       await connection.commit();
 
-      return {
+      const resultObj = {
         id: patientResult.insertId,
         user_id: userId,
         username,
@@ -170,6 +173,13 @@ const PacientesService = {
         last_name: data.lastName,
         blood_type: data.blood_type,
       };
+
+      // Retorna a senha gerada apenas se não foi fornecida (apenas para ambiente de desenvolvimento)
+      if (!plainPassword) {
+        resultObj.temp_password = generatedPassword;
+      }
+
+      return resultObj;
     } catch (error) {
       await connection.rollback();
       throw error;
@@ -279,4 +289,4 @@ const PacientesService = {
   },
 };
 
-module.exports = PacientesService;
+export default PacientesService;

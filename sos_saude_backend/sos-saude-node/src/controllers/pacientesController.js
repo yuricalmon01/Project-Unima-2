@@ -1,5 +1,5 @@
-const { success, error } = require("../utils/response");
-const PacientesService = require("../services/pacientesService");
+import { success, error } from "../utils/response.js";
+import PacientesService from "../services/pacientesService.js";
 
 const PacientesController = {
   async getAll(req, res) {
@@ -73,4 +73,4 @@ const PacientesController = {
   },
 };
 
-module.exports = PacientesController;
+export default PacientesController;

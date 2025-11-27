@@ -1,5 +1,5 @@
 ﻿// const notificationService = require('../../../notifications/notificationService');
-const { success, error } = require('../utils/response');
+import { success, error } from '../utils/response.js';
 // const triageService = require('../services/triageService');
 
 // Criar novo ticket de triagem
@@ -62,11 +62,11 @@ async function proximo(req, res) {
   }
 }
 
-module.exports = {
+export {
   criar,
   obter,
   atualizar,
   remover,
   fila,
-  proximo,
+  proximo
 };

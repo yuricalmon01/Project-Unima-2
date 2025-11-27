@@ -5,14 +5,15 @@ services:
     image: mysql:8.0
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: sosdb
-      MYSQL_USER: sosuser
-      MYSQL_PASSWORD: sospass
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: unima_health_system
+      MYSQL_USER: unima_user
+      MYSQL_PASSWORD: unima_pass
     volumes:
       - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   backend:
     build: .
@@ -21,9 +22,9 @@ services:
       - "3000:3000"
     environment:
       DB_HOST: db
-      DB_USER: sosuser
-      DB_PASSWORD: sospass
-      DB_NAME: sosdb
+      DB_USER: unima_user
+      DB_PASSWORD: unima_pass
+      DB_NAME: unima_health_system
       JWT_SECRET: change_this_secret
       ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3001"
     depends_on:
