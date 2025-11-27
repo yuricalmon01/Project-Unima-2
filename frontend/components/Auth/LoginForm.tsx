@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import api from "@/lib/api";
+import { authAPI } from "@/lib/apiService";
 import { LoginRequest, LoginResponse, User } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import Button from "@/components/UI/Button";
@@ -34,18 +34,16 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       // Normaliza o username (remove espaços e caracteres especiais como @)
-      const normalizedUsername = data.username.trim().replace(/^@+/, ""); // Remove @ do início
+      const normalizedUsername = data.username.trim().replace(/^@+/, "");
       const normalizedData = {
         ...data,
         username: normalizedUsername,
       };
-      const response = await api.post<LoginResponse>(
-        "/api/auth/login",
-        normalizedData
-      );
+
+      const response = await authAPI.login(normalizedData);
 
       // Mapeia a resposta da API para o formato esperado
-      const apiUser = response.data.user;
+      const apiUser = response.user;
       const nameParts = apiUser.name?.split(" ") || [];
       const userData: User = {
         id: apiUser.id,
@@ -57,7 +55,7 @@ export default function LoginForm() {
         last_name: apiUser.last_name || nameParts.slice(1).join(" ") || "",
       };
 
-      login(response.data.token, userData);
+      login(response.token, userData);
       toast.success("Login realizado com sucesso!");
 
       // Aguarda um pouco para o estado atualizar e então redireciona
@@ -66,17 +64,10 @@ export default function LoginForm() {
       }, 300);
     } catch (error: any) {
       console.error("Erro no login:", error);
-      console.error("Erro completo:", {
-        response: error.response,
-        request: error.request,
-        message: error.message,
-      });
 
-      // Melhora o tratamento de erro para garantir que sempre mostre uma mensagem
       let errorMessage = "Erro ao fazer login";
 
       if (error.response) {
-        // Erro com resposta do servidor (401, 400, 500, etc)
         const status = error.response.status;
         const serverError = error.response.data?.error;
 
@@ -91,14 +82,11 @@ export default function LoginForm() {
           errorMessage = serverError || `Erro do servidor (${status})`;
         }
       } else if (error.request) {
-        // Erro de rede (sem resposta do servidor)
         errorMessage = "Erro de conexão. Verifique se o servidor está rodando.";
       } else if (error.message) {
-        // Outro tipo de erro
         errorMessage = error.message;
       }
 
-      // Força a exibição do toast com um delay para garantir que seja renderizado
       setTimeout(() => {
         toast.error(errorMessage, {
           duration: 5000,

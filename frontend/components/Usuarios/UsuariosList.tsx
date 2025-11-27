@@ -1,18 +1,37 @@
 'use client';
 
-import { useApi } from '@/hooks/useApi';
+import { useEffect, useState } from 'react';
+import { usersAPI } from '@/lib/apiService';
 import { User } from '@/types';
 import Loading from '@/components/UI/Loading';
 import Card from '@/components/UI/Card';
 import Button from '@/components/UI/Button';
 import { useRouter } from 'next/navigation';
 import { Mail, User as UserIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function UsuariosList() {
   const router = useRouter();
-  const { data: usuarios, loading } = useApi<User[]>('/api/users', {
-    immediate: true,
-  });
+  const [usuarios, setUsuarios] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  const fetchUsuarios = async () => {
+    try {
+      setLoading(true);
+      const data = await usersAPI.getAll();
+      setUsuarios(data || []);
+    } catch (error: any) {
+      console.error('Erro ao carregar usuários:', error);
+      toast.error('Erro ao carregar usuários');
+      setUsuarios([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (

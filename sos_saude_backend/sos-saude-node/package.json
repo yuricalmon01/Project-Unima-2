@@ -1,0 +1,29 @@
+{
+  "name": "sos-saude-node",
+  "version": "1.0.0",
+  "description": "Backend API for SOS Saúde",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

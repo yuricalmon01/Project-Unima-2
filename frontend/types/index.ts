@@ -5,19 +5,33 @@ export interface User {
   name?: string;
   userType: string;
   user_type_name?: string;
+  user_type_id?: number;
   first_name?: string;
   last_name?: string;
   active?: boolean;
+  cpf?: string;
+  phone?: string;
+  birth_date?: string;
+  gender?: string;
 }
 
 export interface Paciente {
   id: number;
-  nome: string;
-  sobrenome: string;
+  user_id?: number;
+  patient_number?: string;
+  first_name: string;
+  last_name: string;
+  nome?: string; // Para compatibilidade com antigo
+  sobrenome?: string; // Para compatibilidade com antigo
   email: string;
   symptoms?: string[] | null;
   risk_score?: RiskLevel | null;
-  created_at: string;
+  blood_type?: string;
+  sus_card?: string;
+  health_plan?: string;
+  allergies?: string;
+  chronic_conditions?: string;
+  created_at?: string;
 }
 
 export interface LoginRequest {
@@ -44,13 +58,22 @@ export interface NovoPacienteRequest {
   lastName: string;
   email?: string;
   symptoms?: string[];
+  cpf?: string;
+  phone?: string;
+  birth_date?: string;
+  gender?: string;
 }
 
 export interface NovoPacienteResponse {
-  message: string;
-  firstName: string;
-  lastName: string;
-  riskScore: string;
+  id?: number;
+  user_id?: number;
+  patient_number?: string;
+  message?: string;
+  firstName?: string;
+  lastName?: string;
+  first_name?: string;
+  last_name?: string;
+  riskScore?: string;
   username?: string;
   email?: string;
 }

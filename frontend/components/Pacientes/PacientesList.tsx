@@ -1,40 +1,47 @@
 'use client';
 
-import { useState } from 'react';
-import { useApi } from '@/hooks/useApi';
+import { useState, useEffect } from 'react';
 import { Paciente } from '@/types';
+import { pacientesAPI } from '@/lib/apiService';
 import PacienteCard from './PacienteCard';
 import Loading from '@/components/UI/Loading';
 import Button from '@/components/UI/Button';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import Input from '@/components/UI/Input';
+import toast from 'react-hot-toast';
 
 export default function PacientesList() {
   const router = useRouter();
-  const { data: pacientes, loading, refetch } = useApi<Paciente[]>(
-    '/api/pacientes',
-    { immediate: true }
-  );
+  const [pacientes, setPacientes] = useState<Paciente[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Debug: log dos pacientes recebidos
-  if (pacientes) {
-    console.log('[PacientesList] Pacientes recebidos:', pacientes.map(p => ({
-      id: p.id,
-      nome: p.nome,
-      risk_score: p.risk_score,
-      symptoms: p.symptoms
-    })));
-  }
+  useEffect(() => {
+    fetchPacientes();
+  }, []);
+
+  const fetchPacientes = async () => {
+    try {
+      setLoading(true);
+      const data = await pacientesAPI.getAll();
+      setPacientes(data || []);
+    } catch (error: any) {
+      console.error('Erro ao carregar pacientes:', error);
+      toast.error('Erro ao carregar pacientes');
+      setPacientes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPacientes =
     pacientes?.filter(
       (p) =>
-        (p.nome?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (p.sobrenome?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (p.first_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (p.last_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (p.email?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-    ).filter((p) => p.nome && p.sobrenome && p.email) || [];
+    ) || [];
 
   if (loading) {
     return (

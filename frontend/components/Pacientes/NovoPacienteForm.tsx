@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import api from '@/lib/api';
+import { pacientesAPI } from '@/lib/apiService';
 import { NovoPacienteRequest, NovoPacienteResponse } from '@/types';
 import { calcularRisco, getRiskColor, getRiskTextColor } from '@/lib/utils';
 import Button from '@/components/UI/Button';
@@ -73,13 +73,10 @@ export default function NovoPacienteForm() {
         symptoms: symptomsArray,
       };
 
-      const response = await api.post<NovoPacienteResponse>(
-        '/api/pacientes',
-        payload
-      );
+      const response = await pacientesAPI.create(payload);
       
       // Mostra informações de login do paciente
-      const username = response.data.username || 'N/A';
+      const username = response.username || 'N/A';
       const message = `Paciente cadastrado com sucesso!\n\nUsername: ${username}\nSenha: 123456`;
       toast.success(message, {
         duration: 6000,
@@ -88,7 +85,7 @@ export default function NovoPacienteForm() {
       router.push('/pacientes');
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.error || 'Erro ao cadastrar paciente';
+        error.response?.data?.error || error.message || 'Erro ao cadastrar paciente';
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -147,29 +144,14 @@ export default function NovoPacienteForm() {
             className={`p-4 rounded-lg border-2 ${getRiskColor(
               risk as any
             )} transition-all`}
-            style={{
-              color: risk === 'Alta' ? '#7f1d1d' : 
-                     risk === 'Média' ? '#713f12' : 
-                     risk === 'Baixa' ? '#14532d' : '#1f2937'
-            }}
           >
             <p 
               className="font-semibold mb-2"
-              style={{
-                color: risk === 'Alta' ? '#7f1d1d' : 
-                       risk === 'Média' ? '#713f12' : 
-                       risk === 'Baixa' ? '#14532d' : '#1f2937'
-              }}
             >
               Nível de Risco Calculado:
             </p>
             <p 
               className="text-lg font-bold"
-              style={{
-                color: risk === 'Alta' ? '#7f1d1d' : 
-                       risk === 'Média' ? '#713f12' : 
-                       risk === 'Baixa' ? '#14532d' : '#1f2937'
-              }}
             >
               {risk}
             </p>
