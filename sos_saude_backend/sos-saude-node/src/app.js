@@ -21,6 +21,8 @@ const medicinesRoutes = require("./routes/medicinesRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 
 const app = express();
+const triageRoutes = require('./routes/triage');
+const passwordRoutes = require('./routes/password');
 
 // ============================================
 // Segurança e Middleware Global
@@ -28,6 +30,8 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use('/api/triage', triageRoutes);
+app.use('/api/password', passwordRoutes);
 
 // Limite de requisições
 const limiter = rateLimit({

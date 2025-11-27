@@ -160,6 +160,9 @@ app.post("/api/auth/register", async (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/pacientes", pacienteRoutes);
+const appointmentsRoutes = require("./routes/appointments");
+app.use("/api/appointments", appointmentsRoutes);
+
 
 // ============================================
 // HEALTHCHECK (pra teste e monitoramento)
