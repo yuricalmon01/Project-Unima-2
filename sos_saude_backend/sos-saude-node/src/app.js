@@ -13,12 +13,12 @@ const { authenticateToken } = require("./middleware/auth");
 
 // Rotas principais
 const authRoutes = require("./routes/authRoutes");
-const triageRoutes = require("./routes/triageRoutes");
-const appointmentsRoutes = require("./routes/appointmentsRoutes");
-const doctorsRoutes = require("./routes/doctorsRoutes");
-const medicalRecordsRoutes = require("./routes/medicalRecordsRoutes");
-const medicinesRoutes = require("./routes/medicinesRoutes");
-const passwordRoutes = require("./routes/passwordRoutes");
+// const triageRoutes = require("./routes/triageRoutes");
+// const appointmentsRoutes = require("./routes/appointmentsRoutes");
+// const doctorsRoutes = require("./routes/doctorsRoutes");
+// const medicalRecordsRoutes = require("./routes/medicalRecordsRoutes");
+// const medicinesRoutes = require("./routes/medicinesRoutes");
+// const passwordRoutes = require("./routes/passwordRoutes");
 const pacientesRoutes = require("./routes/pacientesRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 
@@ -83,12 +83,12 @@ app.use("/api/auth", authRoutes);
 // ============================================
 // Rotas Protegidas (com JWT)
 // ============================================
-app.use("/api/triage", authenticateToken, triageRoutes);
-app.use("/api/appointments", authenticateToken, appointmentsRoutes);
-app.use("/api/doctors", authenticateToken, doctorsRoutes);
-app.use("/api/medical-records", authenticateToken, medicalRecordsRoutes);
-app.use("/api/medicines", authenticateToken, medicinesRoutes);
-app.use("/api/password", authenticateToken, passwordRoutes);
+// app.use("/api/triage", authenticateToken, triageRoutes);
+// app.use("/api/appointments", authenticateToken, appointmentsRoutes);
+// app.use("/api/doctors", authenticateToken, doctorsRoutes);
+// app.use("/api/medical-records", authenticateToken, medicalRecordsRoutes);
+// app.use("/api/medicines", authenticateToken, medicinesRoutes);
+// app.use("/api/password", authenticateToken, passwordRoutes);
 app.use("/api/pacientes", authenticateToken, pacientesRoutes);
 app.use("/api/users", authenticateToken, usersRoutes);
 

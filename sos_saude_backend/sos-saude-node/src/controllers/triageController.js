@@ -1,62 +1,72 @@
-﻿// Project-Unima-2/sos-saude-node/src/controllers/triageController.js
-
-const notificationService = require('../../../notifications/notificationService');
+﻿// const notificationService = require('../../../notifications/notificationService');
 const { success, error } = require('../utils/response');
-const triageService = require('../services/triageService'); // ajuste se seu service tiver outro nome/path
+// const triageService = require('../services/triageService');
 
-const TriageController = {
-  // exemplo de listar triagens (mantenha suas funções se já existirem)
-  async getAll(req, res) {
-    try {
-      const list = await triageService.getAll(req.query);
-      return success(res, { list });
-    } catch (err) {
-      console.error(err);
-      return error(res, 'Erro ao listar triagens', 500);
-    }
-  },
+// Criar novo ticket de triagem
+async function criar(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao criar ticket', 500);
+  }
+}
 
-  async getById(req, res) {
-    try {
-      const triage = await triageService.getById(req.params.id);
-      if (!triage) return error(res, 'Triagem não encontrada', 404);
-      return success(res, { triage });
-    } catch (err) {
-      console.error(err);
-      return error(res, 'Erro ao buscar triagem', 500);
-    }
-  },
+// Obter ticket por ID
+async function obter(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao buscar ticket', 500);
+  }
+}
 
-  // função principal: muda status da triagem
-  async changeStatus(req, res) {
-    try {
-      const newStatus = req.body.status;
-      const triage = await triageService.changeStatus(req.params.id, newStatus);
+// Atualizar status do ticket
+async function atualizar(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao atualizar ticket', 500);
+  }
+}
 
-      if (!triage) return error(res, 'Triagem não encontrada', 404);
+// Remover ticket
+async function remover(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao remover ticket', 500);
+  }
+}
 
-      // Quando virar "em atendimento" disparamos notificação
-      if (newStatus === 'em atendimento' || newStatus === 'em_atendimento' || newStatus === 'em_atend') {
-        try {
-          await notificationService.send({
-            type: 'triage.status',
-            title: 'Paciente em atendimento',
-            message: `Paciente ${triage.patientName || triage.patient_id || 'Paciente'} está em atendimento.`,
-            payload: { triageId: triage.id || null, patientId: triage.patient_id || triage.patientId || null, status: newStatus },
-          });
-        } catch (notifyErr) {
-          console.warn('Falha ao enviar notificação (triage.changeStatus):', notifyErr && notifyErr.message ? notifyErr.message : notifyErr);
-        }
-      }
+// Obter fila de triagens
+async function fila(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao buscar fila', 500);
+  }
+}
 
-      return success(res, { triage }, 'Status atualizado com sucesso');
-    } catch (err) {
-      console.error(err);
-      return error(res, 'Erro ao mudar status', 500);
-    }
-  },
+// Próximo ticket na fila
+async function proximo(req, res) {
+  try {
+    return error(res, 'Endpoint não implementado ainda', 501);
+  } catch (err) {
+    console.error(err);
+    return error(res, 'Erro ao obter próximo ticket', 500);
+  }
+}
 
-  // se tiver outras funções (create, remove) mantenha ou adicione aqui
+module.exports = {
+  criar,
+  obter,
+  atualizar,
+  remover,
+  fila,
+  proximo,
 };
-
-module.exports = TriageController;

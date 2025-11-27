@@ -1,12 +1,13 @@
-import { Router } from 'express';
-import { auth } from '../middleware/auth.js';
-import { criar, fila, proximo, atualizar, obter, remover } from '../controllers/triageController.js';
+const express = require('express');
+const { authenticateToken } = require('../middleware/auth');
+const { criar, fila, proximo, atualizar, obter, remover } = require('../controllers/triageController');
 
-const router = Router();
-router.post('/tickets', auth, criar);
-router.get('/tickets/:id', auth, obter);
-router.put('/tickets/:id', auth, atualizar);
-router.delete('/tickets/:id', auth, remover);
-router.get('/fila', auth, fila);
-router.post('/fila/proximo', auth, proximo);
-export default router;
+const router = express.Router();
+router.post('/tickets', authenticateToken, criar);
+router.get('/tickets/:id', authenticateToken, obter);
+router.put('/tickets/:id', authenticateToken, atualizar);
+router.delete('/tickets/:id', authenticateToken, remover);
+router.get('/fila', authenticateToken, fila);
+router.post('/fila/proximo', authenticateToken, proximo);
+
+module.exports = router;
