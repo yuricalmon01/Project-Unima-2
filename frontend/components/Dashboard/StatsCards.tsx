@@ -46,16 +46,6 @@ export default function StatsCards() {
           </div>
         </Card>
         <Card className="p-6">
-                  value:
-                  pacientes?.filter((p) => {
-                    const today = new Date().toDateString();
-                    // Protege contra created_at undefined ou inválido
-                    if (!p.created_at) return false;
-                    const date = new Date(p.created_at);
-                    if (isNaN(date.getTime())) return false;
-                    const patientDate = date.toDateString();
-                    return today === patientDate;
-                  }).length || 0,
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Sistema Ativo</p>
@@ -70,6 +60,14 @@ export default function StatsCards() {
     );
   }
 
+  const pacientesHoje =
+    pacientes?.filter((p) => {
+      if (!p.created_at) return false;
+      const date = new Date(p.created_at);
+      if (Number.isNaN(date.getTime())) return false;
+      return date.toDateString() === new Date().toDateString();
+    }).length || 0;
+
   // Para Admin, Doctor, etc - mostra estatísticas completas
   const stats = [
     {
@@ -81,21 +79,8 @@ export default function StatsCards() {
     },
     {
       title: 'Pacientes Hoje',
-      value:
-  pacientes?.filter((p) => {
-    // Se não tiver created_at, ignora esse paciente
-    if (!p.created_at) {
-      return false;
-    }
-
-    const today = new Date().toDateString();
-    const patientDate = new Date(p.created_at as string).toDateString();
-
-
-    return today === patientDate;
-  }).length || 0,
-icon: Activity,
-
+      value: pacientesHoje,
+      icon: Activity,
       color: 'text-success-600',
       bgColor: 'bg-success-50',
     },
