@@ -83,16 +83,18 @@ export default function StatsCards() {
       title: 'Pacientes Hoje',
       value:
   pacientes?.filter((p) => {
-    if (!p.created_at) return false;
+    // Se não tiver created_at, ignora esse paciente
+    if (!p.created_at) {
+      return false;
+    }
 
     const today = new Date().toDateString();
     const patientDate = new Date(p.created_at).toDateString();
 
     return today === patientDate;
   }).length || 0,
+icon: Activity,
 
-
-      icon: Activity,
       color: 'text-success-600',
       bgColor: 'bg-success-50',
     },
