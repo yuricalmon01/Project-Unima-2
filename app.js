@@ -25,14 +25,56 @@ const app = express();
 // ============================================
 
 app.use(helmet());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3001",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+
+// Configuração CORS para aceitar múltiplas origens (desenvolvimento e produção)
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3001",
+  "http://localhost:3001", // Desenvolvimento local
+];
+
+// Adiciona URL do Amplify se configurada
+if (process.env.AMPLIFY_URL) {
+  allowedOrigins.push(process.env.AMPLIFY_URL);
+}
+
+// Permite qualquer subdomínio do Amplify (ex: main.d1234567890.amplifyapp.com)
+const amplifyPattern = /^https:\/\/.*\.amplifyapp\.com$/;
+if (process.env.NODE_ENV === "production") {
+  // Em produção, aceita qualquer URL do Amplify
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Permite requisições sem origin (ex: Postman, mobile apps)
+        if (!origin) return callback(null, true);
+        
+        // Verifica se está na lista de origens permitidas
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        
+        // Verifica se é um domínio do Amplify
+        if (amplifyPattern.test(origin)) {
+          return callback(null, true);
+        }
+        
+        callback(new Error("Não permitido por CORS"));
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
+} else {
+  // Em desenvolvimento, aceita apenas origens configuradas
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
+}
 
 // Limita 100 requisições a cada 15 minutos por IP
 const limiter = rateLimit({

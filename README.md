@@ -18,11 +18,13 @@ Sistema de gestão de saúde completo com autenticação JWT, CRUD de pacientes,
 ### Opção 1: Script Automático (Recomendado)
 
 **Windows:**
+
 ```cmd
 start.bat
 ```
 
 **Linux/Mac:**
+
 ```bash
 chmod +x start.sh
 ./start.sh
@@ -31,6 +33,7 @@ chmod +x start.sh
 ### Opção 2: Manual
 
 #### 1️⃣ Setup Banco de Dados
+
 ```bash
 # Criar banco e tabelas
 mysql -u root -p < "Banco de dados.sql"
@@ -41,6 +44,7 @@ mysql -u root -p unima_health_system < init-seed.sql
 ```
 
 #### 2️⃣ Rodar Backend
+
 ```bash
 cd sos_saude_backend/sos-saude-node
 npm install
@@ -48,6 +52,7 @@ npm run dev
 ```
 
 #### 3️⃣ Rodar Frontend
+
 ```bash
 cd frontend
 npm install
@@ -55,7 +60,9 @@ npm run dev
 ```
 
 #### 4️⃣ Acessar
+
 Abra `http://localhost:3001` e faça login com:
+
 - **Username:** `admin`
 - **Password:** `123456`
 
@@ -64,6 +71,7 @@ Abra `http://localhost:3001` e faça login com:
 ## 🎯 Funcionalidades
 
 ### ✅ Implementado e Testado
+
 - [x] **Autenticação JWT** - Login/logout seguro
 - [x] **CRUD Pacientes** - Gerenciar pacientes com validação
 - [x] **CRUD Usuários** - Gerenciar usuários por tipo
@@ -75,6 +83,7 @@ Abra `http://localhost:3001` e faça login com:
 - [x] **Seed Data** - Dados iniciais para teste
 
 ### 🔄 Em Desenvolvimento
+
 - [ ] Triagem e fila de espera
 - [ ] Agendamentos
 - [ ] Prontuário médico
@@ -85,11 +94,11 @@ Abra `http://localhost:3001` e faça login com:
 
 ## 👥 Usuários de Teste
 
-| Username | Password | Tipo | Email |
-|----------|----------|------|-------|
-| admin | 123456 | Admin | admin@unima.local |
-| medico1 | 123456 | Médico | medico1@unima.local |
-| paciente1 | 123456 | Paciente | paciente1@unima.local |
+| Username  | Password | Tipo     | Email                 |
+| --------- | -------- | -------- | --------------------- |
+| admin     | 123456   | Admin    | admin@unima.local     |
+| medico1   | 123456   | Médico   | medico1@unima.local   |
+| paciente1 | 123456   | Paciente | paciente1@unima.local |
 
 ---
 
@@ -131,12 +140,14 @@ SOS-Saúde/
 ## 🔧 Endpoints da API
 
 ### Autenticação (Público)
+
 ```
 POST /api/auth/login           → Login com username/password
 GET  /api/auth/me              → Dados do usuário autenticado (requer JWT)
 ```
 
 ### Pacientes (Protegido com JWT)
+
 ```
 GET    /api/pacientes           → Listar todos (com filtro search opcional)
 GET    /api/pacientes/:id       → Buscar paciente por ID
@@ -146,12 +157,14 @@ DELETE /api/pacientes/:id       → Remover paciente
 ```
 
 ### Usuários (Protegido com JWT)
+
 ```
 GET  /api/users                → Listar todos os usuários
 GET  /api/users/:id            → Buscar usuário específico
 ```
 
 ### Health Check (Público)
+
 ```
 GET  /health                   → Status do servidor
 GET  /                         → Mensagem de boas-vindas
@@ -162,6 +175,7 @@ GET  /                         → Mensagem de boas-vindas
 ## 🌐 Variáveis de Ambiente
 
 ### Backend (`.env` na raiz do backend)
+
 ```env
 PORT=3000
 DB_HOST=localhost
@@ -176,6 +190,7 @@ ALLOWED_ORIGINS=http://localhost:3001,http://localhost:3000
 ```
 
 ### Frontend (`.env.local` na raiz do frontend)
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ```
@@ -185,6 +200,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ## 📦 Tecnologias Utilizadas
 
 ### Backend
+
 - **Runtime:** Node.js 18+
 - **Framework:** Express 4.18
 - **Modules:** ES Modules (import/export)
@@ -194,6 +210,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000/api
 - **Async:** async/await nativa
 
 ### Frontend
+
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS 3.4
@@ -208,6 +225,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ## 🚀 Como Rodar em Desenvolvimento
 
 ### ✅ Verificação Pré-requisitos
+
 ```bash
 node --version   # Deve ser >= 18
 npm --version    # Qualquer versão recente
@@ -281,6 +299,7 @@ npm run dev
 ## 📡 Exemplos de Requisições
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -305,6 +324,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 ### Listar Pacientes (com Token)
+
 ```bash
 curl -X GET http://localhost:3000/api/pacientes \
   -H "Authorization: Bearer SEU_TOKEN_AQUI"
@@ -325,6 +345,7 @@ curl -X GET http://localhost:3000/api/pacientes \
 ```
 
 ### Criar Paciente
+
 ```bash
 curl -X POST http://localhost:3000/api/pacientes \
   -H "Content-Type: application/json" \
@@ -343,25 +364,30 @@ curl -X POST http://localhost:3000/api/pacientes \
 ## 🔍 Validações Realizadas
 
 ✅ **ES Modules**
+
 - Todo backend convertido de CommonJS para import/export
 - `"type": "module"` habilitado no package.json
 - Todos os imports incluem extensão `.js`
 
 ✅ **Autenticação JWT**
+
 - Login funciona corretamente
 - Token é gerado com ID e role do usuário
 - Middleware valida token em rotas protegidas
 - Retorna 401/403 apropriadamente
 
 ✅ **Padrão de Respostas**
+
 - Todas as respostas: `{ success, data, message?, error? }`
 - Status codes apropriados (200, 201, 400, 401, 404, 500)
 
 ✅ **CORS**
+
 - Frontend em localhost:3001 pode acessar backend
 - Métodos: GET, POST, PUT, DELETE, OPTIONS, PATCH
 
 ✅ **Banco de Dados**
+
 - Schema está correto (todas as tabelas)
 - Foreign keys e índices presentes
 - Seed data com usuários de teste
@@ -371,14 +397,17 @@ curl -X POST http://localhost:3000/api/pacientes \
 ## ⚠️ Notas Importantes
 
 ### Senhas em Texto Plano (Desenvolvimento)
-**Aviso:** As senhas nos dados de teste estão em texto plano por conveniência de desenvolvimento. 
+
+**Aviso:** As senhas nos dados de teste estão em texto plano por conveniência de desenvolvimento.
 **Para Produção:** Use bcrypt com salt >= 10.
 
 ### JWT Secret
+
 **Aviso:** `JWT_SECRET=unima_secret_key` é apenas para desenvolvimento.
 **Para Produção:** Use uma string aleatória forte de 32+ caracteres.
 
 ### Expiração do Token
+
 Tokens expiram em 7 dias. Implemente refresh token para renovação automática.
 
 ---
@@ -386,6 +415,7 @@ Tokens expiram em 7 dias. Implemente refresh token para renovação automática.
 ## 🐛 Troubleshooting
 
 ### Erro: "Cannot find module"
+
 ```bash
 cd sos_saude_backend/sos-saude-node
 npm install
@@ -394,7 +424,9 @@ npm install
 ```
 
 ### Erro: "ECONNREFUSED" (MySQL)
+
 MySQL não está rodando:
+
 ```bash
 # Windows
 # Inicie MySQL via Services ou MySQL Workbench
@@ -407,18 +439,23 @@ sudo service mysql start
 ```
 
 ### Erro: "EADDRINUSE :::3000"
+
 Porta 3000 em uso. Mude a porta no `.env`:
+
 ```env
 PORT=3001
 ```
 
 ### Erro: CORS
+
 Frontend não consegue acessar backend:
+
 1. Verifique NEXT_PUBLIC_API_URL em .env.local
 2. Verifique allowed origins em app.js
 3. Verifique se backend está rodando
 
 ### Login não funciona
+
 1. Verifique credenciais: `mysql unima_health_system -e "SELECT username, password_hash FROM users;"`
 2. Verifique JWT_SECRET no .env
 3. Verifique logs do backend (npm run dev)
@@ -429,7 +466,7 @@ Frontend não consegue acessar backend:
 
 Para informações detalhadas, consulte:
 
-1. **[SETUP_DESENVOLVIMENTO.md](./SETUP_DESENVOLVIMENTO.md)** 
+1. **[SETUP_DESENVOLVIMENTO.md](./SETUP_DESENVOLVIMENTO.md)**
    - Guia passo a passo detalhado
    - Troubleshooting completo
    - Próximas etapas
@@ -449,6 +486,7 @@ Para informações detalhadas, consulte:
 ## ✨ O Que Foi Feito
 
 ### 🔄 Conversão para ES Modules (24 arquivos)
+
 - ✅ app.js
 - ✅ todos os controllers
 - ✅ todas as rotas
@@ -458,17 +496,20 @@ Para informações detalhadas, consulte:
 - ✅ config
 
 ### 🔐 Segurança
+
 - ✅ JWT authentication
 - ✅ CORS configurado
 - ✅ Rate limiting
 - ✅ Helmet.js
 
 ### 🗄️ Banco de Dados
+
 - ✅ Schema MySQL completo
 - ✅ Seed data com usuários teste
 - ✅ Relações FK
 
 ### 📚 Documentação
+
 - ✅ 3 arquivos de documentação
 - ✅ 2 scripts de inicialização
 - ✅ Exemplos de API
@@ -478,6 +519,7 @@ Para informações detalhadas, consulte:
 ## 🚀 Roadmap
 
 ### Fase 1: ✅ Concluído
+
 - [x] Setup inicial
 - [x] Autenticação JWT
 - [x] CRUD básico
@@ -485,11 +527,13 @@ Para informações detalhadas, consulte:
 - [x] Documentação
 
 ### Fase 2: 🔄 Próxima
+
 - [ ] Triagem
 - [ ] Agendamentos
 - [ ] Prontuário
 
 ### Fase 3: ⏳ Planejado
+
 - [ ] Testes automatizados
 - [ ] CI/CD (GitHub Actions)
 - [ ] Docker
@@ -500,6 +544,7 @@ Para informações detalhadas, consulte:
 ## 💡 Dicas
 
 ### Modo Debug
+
 ```bash
 # Backend com nodemon (reload automático)
 npm run dev
@@ -511,6 +556,7 @@ npm run dev
 ```
 
 ### Testar com curl
+
 ```bash
 # Health check
 curl http://localhost:3000/health
@@ -526,6 +572,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ## 📞 Suporte
 
 Em caso de dúvidas:
+
 1. Verifique os logs do terminal (backend: npm run dev)
 2. Abra DevTools do navegador (F12) → Console e Network
 3. Verifique os arquivos `.env`
@@ -645,11 +692,13 @@ const pacientes = await pacientesAPI.getAll();
 Todos os endpoints protegidos requerem header: `Authorization: Bearer <token>`
 
 ### Autenticação (Pública)
+
 - `POST /api/auth/login` - Login
 - `POST /api/auth/register` - Registrar novo usuário
 - `GET /api/auth/me` - Obter dados do usuário autenticado
 
 ### Pacientes
+
 - `GET /api/pacientes` - Listar todos
 - `GET /api/pacientes/:id` - Obter um paciente
 - `POST /api/pacientes` - Criar novo
@@ -657,26 +706,31 @@ Todos os endpoints protegidos requerem header: `Authorization: Bearer <token>`
 - `DELETE /api/pacientes/:id` - Remover
 
 ### Usuários
+
 - `GET /api/users` - Listar todos
 - `GET /api/users/:id` - Obter um usuário
 
 ### Agendamentos
+
 - `GET /api/appointments` - Listar
 - `POST /api/appointments` - Criar
 - `PUT /api/appointments/:id` - Atualizar
 - `DELETE /api/appointments/:id` - Remover
 
 ### Médicos
+
 - `GET /api/doctors` - Listar
 - `GET /api/doctors/:id` - Obter um médico
 - `GET /api/doctors/stats/:id` - Estatísticas
 
 ### Prontuário
+
 - `GET /api/medical-records` - Listar
 - `POST /api/medical-records` - Criar
 - `PUT /api/medical-records/:id` - Atualizar
 
 ### Triagem
+
 - `GET /api/triage/fila` - Fila de triagem
 - `POST /api/triage/tickets` - Criar ticket
 - `POST /api/triage/fila/proximo` - Próximo paciente
@@ -686,6 +740,7 @@ Todos os endpoints protegidos requerem header: `Authorization: Bearer <token>`
 ## 🌍 Variáveis de Ambiente
 
 ### Backend (.env)
+
 ```env
 # Servidor
 PORT=3000
@@ -705,6 +760,7 @@ ALLOWED_ORIGINS=http://localhost:3001,http://localhost:3000
 ```
 
 ### Frontend (.env.local)
+
 ```env
 # API do backend
 NEXT_PUBLIC_API_URL=http://localhost:3000
@@ -718,6 +774,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ## 📦 Build para Produção
 
 ### Frontend
+
 ```bash
 cd frontend
 npm run build
@@ -725,6 +782,7 @@ npm start
 ```
 
 ### Backend
+
 ```bash
 cd sos_saude_backend/sos-saude-node
 npm install --production
@@ -822,6 +880,7 @@ Este projeto está sob a licença MIT. Veja LICENSE para mais detalhes.
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
+
 1. Verificar logs do backend: `node src/app.js`
 2. Verificar console do navegador (F12)
 3. Consultar seção **Troubleshooting** em **[DEPLOYMENT.md](./DEPLOYMENT.md)**
@@ -846,6 +905,7 @@ npm run dev
 ```
 
 Acesse:
+
 - Frontend: http://localhost:3001
 - Backend API: http://localhost:3000
 
@@ -911,6 +971,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -976,6 +1037,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "message": "Paciente registrado com sucesso",
@@ -1046,6 +1108,7 @@ npm run dev:mock
 ```
 
 No modo mock:
+
 - Não é necessário banco de dados MySQL
 - Dados são armazenados em memória
 - Usuários de teste pré-configurados
@@ -1149,26 +1212,395 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ## 🎨 Funcionalidades do Frontend
 
 ### Dashboard
+
 - Estatísticas de pacientes (apenas para Admin/Doctor/Nurse/Receptionist)
 - Visão geral do sistema
 - Cards informativos
 
 ### Gestão de Pacientes
+
 - Lista de pacientes com busca
 - Cadastro de novos pacientes
 - Visualização de sintomas e risco calculado
 - Cores visuais para níveis de risco (Alta/Média/Baixa)
 
 ### Gestão de Usuários (Apenas Admin)
+
 - Lista de usuários
 - Cadastro de novos usuários
 - Controle de tipos de usuário
 
 ### Controle de Acesso
+
 - Pacientes não podem ver lista de pacientes
 - Pacientes não podem cadastrar novos pacientes
 - Apenas Admin pode gerenciar usuários
 - Rotas protegidas com autenticação
+
+## 🚀 Deploy no AWS Amplify
+
+### Configuração do Frontend
+
+O projeto já está configurado com `amplify.yml` para deploy no AWS Amplify.
+
+#### Passos para Deploy:
+
+1. **Conectar Repositório no AWS Amplify**
+   - Acesse o console do AWS Amplify
+   - Conecte o repositório GitHub: `Guilhermegg-06/Project-Unima-2`
+   - Selecione o branch `main`
+
+2. **Configurar Variáveis de Ambiente**
+
+   No console do Amplify, vá em **App settings > Environment variables** e adicione:
+
+   ```
+   NEXT_PUBLIC_API_URL=https://seu-backend-url.com
+   ```
+
+   **Importante:** Substitua `https://seu-backend-url.com` pela URL real do seu backend em produção.
+
+3. **Configurações de Build**
+
+   O Amplify detectará automaticamente o arquivo `amplify.yml` na raiz do projeto. As configurações são:
+   - **Base directory:** `frontend` (detectado automaticamente)
+   - **Build command:** `npm run build` (executado dentro de `frontend/`)
+   - **Output directory:** `.next` (gerado automaticamente pelo Next.js)
+
+4. **Deploy do Backend**
+
+   O AWS Amplify faz deploy apenas do frontend. O backend precisa ser deployado separadamente:
+
+   **Opções recomendadas:**
+   - **AWS Elastic Beanstalk** (mais simples para Node.js/Express)
+   - **AWS EC2** (mais controle)
+   - **AWS ECS/Fargate** (para containers Docker)
+
+   Após fazer deploy do backend, atualize a variável `NEXT_PUBLIC_API_URL` no Amplify com a URL do backend.
+
+### Variáveis de Ambiente no Amplify
+
+| Variável              | Descrição                           | Exemplo                      |
+| --------------------- | ----------------------------------- | ---------------------------- |
+| `NEXT_PUBLIC_API_URL` | URL completa do backend em produção | `https://api.seudominio.com` |
+
+**Nota:** Variáveis que começam com `NEXT_PUBLIC_` são expostas ao cliente e podem ser acessadas no código do frontend.
+
+### Troubleshooting
+
+- **Build falha:** Verifique os logs no console do Amplify
+- **Erro 403:** Verifique se a URL do backend está correta e se o CORS está configurado
+- **Página em branco:** Verifique se `NEXT_PUBLIC_API_URL` está configurada corretamente
+
+## 🖥️ Deploy do Backend na AWS (Passo a Passo)
+
+### O que é a URL do Backend em Produção?
+
+A URL do backend em produção é o endereço onde sua API Node.js/Express estará rodando na AWS. Exemplos:
+
+- `https://unima-api.us-east-1.elasticbeanstalk.com`
+- `https://api.seudominio.com`
+- `https://abc123.execute-api.us-east-1.amazonaws.com`
+
+Essa URL será usada no frontend (via variável `NEXT_PUBLIC_API_URL`) para fazer requisições à API.
+
+### Opções de Deploy
+
+**Opção 1: AWS Elastic Beanstalk (RECOMENDADA - Mais Simples)**
+
+- ✅ Gerenciamento automático de servidores
+- ✅ Escalabilidade automática
+- ✅ Fácil de configurar
+- 💰 Custo: ~$15-30/mês
+
+**Opção 2: AWS EC2**
+
+- Mais controle, mas mais complexo
+- 💰 Custo: ~$10-50/mês
+
+**Opção 3: AWS ECS/Fargate**
+
+- Para containers Docker
+- 💰 Custo: ~$20-40/mês
+
+---
+
+## 📋 Guia Completo: Deploy no AWS Elastic Beanstalk
+
+### Pré-requisitos
+
+1. Conta AWS ativa
+2. AWS CLI instalado ([Download aqui](https://aws.amazon.com/cli/))
+3. EB CLI instalado (ferramenta do Elastic Beanstalk)
+
+### Passo 1: Instalar EB CLI
+
+**Windows (PowerShell):**
+
+```powershell
+pip install awsebcli
+```
+
+**Linux/Mac:**
+
+```bash
+pip3 install awsebcli
+```
+
+**Verificar instalação:**
+
+```bash
+eb --version
+```
+
+### Passo 2: Configurar Credenciais AWS
+
+1. Acesse o [Console AWS](https://console.aws.amazon.com/)
+2. Vá em **IAM > Users > Seu Usuário > Security Credentials**
+3. Clique em **Create Access Key**
+4. Baixe as credenciais (Access Key ID e Secret Access Key)
+
+**Configurar no terminal:**
+
+```bash
+aws configure
+```
+
+Digite:
+
+- AWS Access Key ID: [sua access key]
+- AWS Secret Access Key: [sua secret key]
+- Default region: `us-east-1` (ou a região mais próxima)
+- Default output format: `json`
+
+### Passo 3: Criar Banco de Dados RDS MySQL
+
+1. **Acesse o Console AWS RDS:**
+   - Vá em [RDS Console](https://console.aws.amazon.com/rds/)
+   - Clique em **Create database**
+
+2. **Configurar Banco:**
+   - **Engine:** MySQL
+   - **Version:** MySQL 8.0
+   - **Template:** Free tier (para testes) ou Production
+   - **DB instance identifier:** `unima-health-db`
+   - **Master username:** `admin` (ou outro)
+   - **Master password:** [crie uma senha forte]
+   - **DB instance class:** `db.t3.micro` (free tier) ou maior
+   - **Storage:** 20 GB (mínimo)
+   - **VPC:** Default VPC
+   - **Public access:** Yes (para facilitar conexão inicial)
+
+3. **Criar e anotar:**
+   - Anote o **Endpoint** (ex: `unima-health-db.abc123.us-east-1.rds.amazonaws.com`)
+   - Anote o **Port** (padrão: 3306)
+   - Anote o **Username** e **Password**
+
+4. **Configurar Security Group:**
+   - Vá em **VPC Security Groups**
+   - Encontre o security group do RDS
+   - Adicione regra de entrada:
+     - Type: MySQL/Aurora
+     - Port: 3306
+     - Source: Seu IP ou 0.0.0.0/0 (apenas para testes)
+
+5. **Importar Schema:**
+   - Conecte ao banco usando MySQL Workbench ou linha de comando
+   - Execute o arquivo `Banco de dados.sql` ou `initdb/init.sql`
+
+### Passo 4: Preparar Projeto para Deploy
+
+O projeto já está preparado com:
+
+- ✅ `.ebextensions/nodecommand.config` - Configuração do Node.js
+- ✅ `.ebignore` - Arquivos a ignorar no deploy
+- ✅ CORS configurado para aceitar URLs do Amplify
+
+**Verificar se está tudo certo:**
+
+```bash
+# Na raiz do projeto
+ls -la .ebextensions/
+ls -la .ebignore
+```
+
+### Passo 5: Inicializar Aplicação no Elastic Beanstalk
+
+**Na raiz do projeto (onde está o package.json):**
+
+```bash
+eb init
+```
+
+**Responda as perguntas:**
+
+1. **Select a region:** Escolha a mesma região do RDS (ex: `us-east-1`)
+2. **Application name:** `unima-health-api` (ou outro nome)
+3. **Platform:** Node.js
+4. **Platform version:** Node.js 18 (ou a versão mais recente)
+5. **SSH:** Yes (para debug se necessário)
+6. **Keypair:** Crie um novo ou use existente
+
+### Passo 6: Criar Ambiente e Fazer Deploy
+
+```bash
+eb create unima-health-env
+```
+
+Isso vai:
+
+- Criar o ambiente no Elastic Beanstalk
+- Fazer upload do código
+- Instalar dependências
+- Iniciar a aplicação
+
+**Aguarde 5-10 minutos** enquanto o ambiente é criado.
+
+### Passo 7: Configurar Variáveis de Ambiente
+
+Após o deploy, configure as variáveis de ambiente:
+
+```bash
+eb setenv \
+  DB_HOST=unima-health-db.abc123.us-east-1.rds.amazonaws.com \
+  DB_USER=admin \
+  DB_PASSWORD=sua_senha_aqui \
+  DB_NAME=unima_health_system \
+  JWT_SECRET=sua_chave_secreta_forte_aqui \
+  NODE_ENV=production \
+  PORT=8080 \
+  FRONTEND_URL=https://main.d1234567890.amplifyapp.com
+```
+
+**OU configure pelo console:**
+
+1. Acesse [Elastic Beanstalk Console](https://console.aws.amazon.com/elasticbeanstalk/)
+2. Selecione sua aplicação e ambiente
+3. Vá em **Configuration > Software > Environment properties**
+4. Adicione as variáveis:
+   - `DB_HOST`: Endpoint do RDS
+   - `DB_USER`: Usuário do banco
+   - `DB_PASSWORD`: Senha do banco
+   - `DB_NAME`: `unima_health_system`
+   - `JWT_SECRET`: [gere uma chave forte]
+   - `NODE_ENV`: `production`
+   - `PORT`: `8080`
+   - `FRONTEND_URL`: URL do seu frontend no Amplify
+
+### Passo 8: Obter URL do Backend
+
+Após o deploy, você verá a URL no terminal ou no console:
+
+```bash
+eb status
+```
+
+A URL será algo como:
+
+```
+CNAME: unima-health-env.abc123.us-east-1.elasticbeanstalk.com
+```
+
+**URL completa:** `http://unima-health-env.abc123.us-east-1.elasticbeanstalk.com`
+
+**Para HTTPS (recomendado):**
+
+1. No console do Elastic Beanstalk
+2. Vá em **Configuration > Load balancer**
+3. Adicione certificado SSL (pode usar AWS Certificate Manager)
+
+### Passo 9: Testar o Backend
+
+```bash
+# Testar healthcheck
+curl http://unima-health-env.abc123.us-east-1.elasticbeanstalk.com/health
+
+# Deve retornar: {"status":"ok"}
+```
+
+### Passo 10: Configurar Frontend no Amplify
+
+1. Acesse o [Amplify Console](https://console.aws.amazon.com/amplify/)
+2. Selecione sua aplicação
+3. Vá em **App settings > Environment variables**
+4. Adicione/Atualize:
+   ```
+   NEXT_PUBLIC_API_URL=http://unima-health-env.abc123.us-east-1.elasticbeanstalk.com
+   ```
+5. Faça um novo deploy (ou aguarde o próximo)
+
+### Comandos Úteis do EB CLI
+
+```bash
+# Ver status do ambiente
+eb status
+
+# Ver logs
+eb logs
+
+# Abrir no navegador
+eb open
+
+# Fazer novo deploy após mudanças
+eb deploy
+
+# SSH no servidor (para debug)
+eb ssh
+
+# Listar ambientes
+eb list
+
+# Terminar ambiente (CUIDADO: apaga tudo)
+eb terminate
+```
+
+### Troubleshooting
+
+**Erro de conexão com banco:**
+
+- Verifique se o Security Group do RDS permite conexões do Elastic Beanstalk
+- Verifique se as credenciais estão corretas
+- Verifique se o endpoint do RDS está correto
+
+**Erro 502 Bad Gateway:**
+
+- Verifique os logs: `eb logs`
+- Verifique se a porta está configurada como 8080
+- Verifique se o processo está rodando: `eb ssh` e depois `ps aux | grep node`
+
+**CORS bloqueando requisições:**
+
+- Verifique se `FRONTEND_URL` está configurada com a URL correta do Amplify
+- O CORS já está configurado para aceitar URLs do Amplify automaticamente
+
+**Aplicação não inicia:**
+
+- Verifique os logs: `eb logs`
+- Verifique se todas as variáveis de ambiente estão configuradas
+- Verifique se o `package.json` tem o script `start` correto
+
+### Custos Estimados
+
+**Free Tier (primeiros 12 meses):**
+
+- RDS: 750 horas/mês grátis (db.t3.micro)
+- Elastic Beanstalk: Grátis (você paga apenas pelos recursos EC2)
+- EC2: 750 horas/mês grátis (t2.micro)
+
+**Após Free Tier:**
+
+- RDS db.t3.micro: ~$15/mês
+- EC2 t2.micro: ~$10/mês
+- **Total estimado:** ~$25-30/mês
+
+### Próximos Passos
+
+1. ✅ Backend deployado
+2. ✅ URL do backend obtida
+3. ✅ Frontend configurado no Amplify com `NEXT_PUBLIC_API_URL`
+4. ✅ Testar integração completa
+5. 🔒 Configurar HTTPS (recomendado)
+6. 📊 Configurar monitoramento (CloudWatch)
 
 ## 🤝 Contribuindo
 

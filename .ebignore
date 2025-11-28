@@ -1,0 +1,57 @@
+# Dependências do frontend
+frontend/
+frontend/**/*
+
+# Arquivos de desenvolvimento
+.vs/
+.vscode/
+.idea/
+*.log
+*.swp
+*.swo
+*~
+
+# Node modules (será instalado no servidor)
+node_modules/
+
+# Arquivos de backup
+bak_files/
+*.bak
+
+# Arquivos de teste
+tests/
+*.test.js
+*.spec.js
+jest.config.cjs
+
+# Arquivos de configuração local
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# Docker (não necessário no EB)
+docker-compose.yml
+dockerfile
+Dockerfile
+
+# Documentação
+*.md
+!README.md
+
+# Arquivos temporários
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Arquivos de build do frontend
+.next/
+dist/
+build/
+
+# Arquivos de configuração do Amplify (só frontend)
+amplify.yml
+
