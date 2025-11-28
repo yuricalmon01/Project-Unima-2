@@ -86,7 +86,8 @@ export default function StatsCards() {
     if (!p.created_at) return false;
 
     const today = new Date().toDateString();
-    const patientDate = new Date(p.created_at).toDateString();
+    const patientDate = new Date(p.created_at as string).toDateString();
+
 
     return today === patientDate;
   }).length || 0,
