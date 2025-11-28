@@ -5,7 +5,7 @@ branch-defaults:
 global:
   application_name: unima-health-api
   branch: main
-  default_ec2_keyname: null
+  default_ec2_keyname: aws-eb
   default_platform: node.js-20
   default_region: us-east-1
   include_git_submodules: true
