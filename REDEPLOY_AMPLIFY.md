@@ -3,13 +3,16 @@
 ## Método 1: Via Console AWS (Mais Simples)
 
 ### Passo 1: Acessar o Console
+
 1. Acesse: https://console.aws.amazon.com/amplify/
 2. Faça login na sua conta AWS
 
 ### Passo 2: Selecionar Aplicação
+
 1. Clique na sua aplicação (provavelmente `main` ou o nome que você deu)
 
 ### Passo 3: Fazer Redeploy
+
 1. No menu lateral, clique em **"Redeploy this version"** (se aparecer)
 2. **OU** vá em **"App settings" > "Build settings"**
 3. Clique em **"Redeploy this version"**
@@ -42,6 +45,7 @@ aws amplify start-job --app-id dclv4sf0nhoba --branch-name main --job-type RELEA
 ## ✅ Verificar se Funcionou
 
 Após o redeploy:
+
 1. Acesse: https://main.dclv4sf0nhoba.amplifyapp.com/
 2. A página deve carregar (não mais a mensagem de boas-vindas)
 3. Teste fazer login
@@ -51,7 +55,7 @@ Após o redeploy:
 ## 🔧 Se o Frontend Ainda Não Funcionar
 
 Verifique:
+
 1. Se a variável `NEXT_PUBLIC_API_URL` está configurada corretamente
 2. Se o build foi bem-sucedido (veja os logs no console)
 3. Se há erros no console do navegador (F12)
-
