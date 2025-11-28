@@ -19,7 +19,8 @@ const userRoutes = require("./routes/users");
 const pacienteRoutes = require("./routes/pacientes");
 
 const app = express();
-
+app.set("trust proxy", 1);
+app.set("trust proxy", 1); // permite identificar IP real atrás do API Gateway/EB
 // ============================================
 // MIDDLEWARES GLOBAIS
 // ============================================
@@ -46,17 +47,17 @@ if (process.env.NODE_ENV === "production") {
       origin: (origin, callback) => {
         // Permite requisições sem origin (ex: Postman, mobile apps)
         if (!origin) return callback(null, true);
-        
+
         // Verifica se está na lista de origens permitidas
         if (allowedOrigins.includes(origin)) {
           return callback(null, true);
         }
-        
+
         // Verifica se é um domínio do Amplify
         if (amplifyPattern.test(origin)) {
           return callback(null, true);
         }
-        
+
         callback(new Error("Não permitido por CORS"));
       },
       credentials: true,
@@ -204,7 +205,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/pacientes", pacienteRoutes);
 const appointmentsRoutes = require("./routes/appointments");
 app.use("/api/appointments", appointmentsRoutes);
-
 
 // ============================================
 // HEALTHCHECK (pra teste e monitoramento)
