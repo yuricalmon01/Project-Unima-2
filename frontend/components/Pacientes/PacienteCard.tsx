@@ -4,6 +4,10 @@ import Card from '@/components/UI/Card';
 import { Mail, Calendar, AlertCircle } from 'lucide-react';
 
 export default function PacienteCard({ paciente }: { paciente: Paciente }) {
+  const createdAtLabel = paciente.created_at
+    ? formatDate(paciente.created_at)
+    : 'Data indisponível';
+
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <div className="flex items-start justify-between">
@@ -62,7 +66,7 @@ export default function PacienteCard({ paciente }: { paciente: Paciente }) {
             )}
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span>Cadastrado em {formatDate(paciente.created_at)}</span>
+              <span>Cadastrado em {createdAtLabel}</span>
             </div>
           </div>
         </div>
