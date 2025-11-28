@@ -1,0 +1,4 @@
+Nov 28 04:15:38 ip-172-31-26-94 crond[1584]: (CRON) STARTUP (1.5.7)
+Nov 28 04:15:38 ip-172-31-26-94 crond[1584]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Nov 28 04:15:38 ip-172-31-26-94 crond[1584]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 91% if used.)
+Nov 28 04:15:38 ip-172-31-26-94 crond[1584]: (CRON) INFO (running with inotify support)

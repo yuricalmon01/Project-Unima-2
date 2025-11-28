@@ -1,6 +1,6 @@
 branch-defaults:
   main:
-    environment: null
+    environment: unima-health-env
     group_suffix: null
 global:
   application_name: unima-health-api
@@ -13,6 +13,6 @@ global:
   platform_name: null
   platform_version: null
   profile: null
-  repository: origin
-  sc: git
+  repository: null
+  sc: null
   workspace_type: Application
