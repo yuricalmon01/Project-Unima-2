@@ -23,8 +23,21 @@ export function useApi<T>(
       setData(response.data);
       return response.data;
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error || err.message || 'Erro ao carregar dados';
+      let errorMessage = 'Erro ao carregar dados';
+      
+      if (err.response) {
+        // Erro com resposta do servidor
+        if (err.response.status === 403) {
+          errorMessage = err.response?.data?.error || 'Acesso negado. Verificando autenticação...';
+        } else if (err.response.status === 401) {
+          errorMessage = err.response?.data?.error || 'Não autorizado. Redirecionando para login...';
+        } else {
+          errorMessage = err.response?.data?.error || `Erro ${err.response.status}: ${err.message}`;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       throw err;
     } finally {

@@ -28,8 +28,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Token inválido ou expirado
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Token inválido, expirado ou sem permissão
+      // 403 também pode indicar token inválido quando o JWT não pode ser verificado
       auth.logout();
     }
     return Promise.reject(error);
