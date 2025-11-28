@@ -9,10 +9,15 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function StatsCards() {
   const { user, isLoading: userLoading } = useAuth();
-  const shouldFetch = !userLoading && user?.userType && user.userType !== 'Patient';
-  const { data: pacientes, loading } = useApi<Paciente[]>('/api/pacientes', {
+  // Garantir que flags de loading/controle sejam booleanas
+  const userLoadingBool: boolean = !!userLoading;
+  const isPatient: boolean = !!user && user.userType === 'Patient';
+  const shouldFetch: boolean = !userLoadingBool && !!user?.userType && !isPatient;
+
+  const { data: pacientes, loading: loadingFlag } = useApi<Paciente[]>('/api/pacientes', {
     immediate: shouldFetch, // Não busca se for Patient ou ainda carregando
   });
+  const loading: boolean = !!loadingFlag;
 
   // Se ainda está carregando o usuário, mostra loading
   if (userLoading) {
